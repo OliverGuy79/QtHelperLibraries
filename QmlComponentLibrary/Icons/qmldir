@@ -1,0 +1,4 @@
+module Icons
+
+singleton IconVault 1.0 IconVault.qml
+Icon 1.0 Icon.qml

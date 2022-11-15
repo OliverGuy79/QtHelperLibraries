@@ -1,0 +1,4 @@
+module FluidLayouts
+
+FluidGridLayout 1.0 FluidGridLayout.qml
+FluidGridView 1.0 FluidGridView.qml

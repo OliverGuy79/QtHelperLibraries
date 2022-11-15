@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>.env</file>
+        <file>ResponsiveDrawer.qml</file>
+        <file>main.qml</file>
+        <file>../QmlComponentLibrary/Icons/media/svg/Material/Rounded/add_home.svg</file>
+        <file>../QmlComponentLibrary/Icons/media/svg/Material/Rounded/home.svg</file>
+        <file>Qml/Delegates/RecipeCard.qml</file>
+    </qresource>
+    <qresource prefix="/icons/rounded">
+        <file>Qml/icons/add_home.svg</file>
+    </qresource>
+    <qresource prefix="/Delegates"/>
+</RCC>
