@@ -9,7 +9,7 @@ Rectangle {
 
 
 
-    property string imgSrc: image// "qrc:/icons/rounded/Qml/icons/add_home.svg"
+    property string imgSrc: model.image// "qrc:/icons/rounded/Qml/icons/add_home.svg"
     property string title2: model.title
     implicitHeight: 250
     implicitWidth: 450
@@ -37,7 +37,7 @@ Rectangle {
 
             source: recipeCardDelegate.imgSrc
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Layout.fillHeight: false
+            Layout.fillHeight: true
             Layout.fillWidth: false
             fillMode: Image.Pad
 
@@ -63,6 +63,7 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap
+            minimumPixelSize: 6
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             font.pointSize: 18
             Layout.columnSpan: 1

@@ -110,23 +110,11 @@ Window {
         anchors.topMargin: 200
         model: recipeModel
 
-        delegate: WebView{
-
-                id: webview
-                //url: "https://doc.qt.io/qtcreator/creator-analyze-mode.html"
-                implicitHeight: 350
-                implicitWidth:  500
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                focus: true
-
-                Component.onCompleted:{
-                    webview.loadHtml('<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/oslnmLQ5Zh8?controls=0&amp;start=126" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-
-                }
+        delegate: RecipeCard{
 
 
-            }
+        }
+
         focus: true
     }
 

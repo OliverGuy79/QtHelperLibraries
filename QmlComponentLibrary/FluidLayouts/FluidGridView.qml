@@ -98,7 +98,7 @@ Rectangle {
 
             Repeater{
                 id: items
-                model: 5//root.model
+                model: root.model
                 delegate: root.delegate
             }
 
