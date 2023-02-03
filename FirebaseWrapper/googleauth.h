@@ -37,6 +37,7 @@ public slots:
     void setupOauth();
     QVariant getUserInfo();
     void resetOauth(const QString &newClientCode, const QString &newClientId);
+    QString getIdToken();
 signals:
     void authenticated();
     void subscribed(const QUrl &url);

@@ -16,7 +16,7 @@ void GoogleAuth::setupOauth(){
 
     auto replyHandler = new QOAuthHttpServerReplyHandler(1337, this);
     this->oauth2.setReplyHandler(replyHandler);
-    this->oauth2.setAuthorizationUrl(QUrl("https://accounts.google.com/o/oauth2/v2/auth"));
+    this->oauth2.setAuthorizationUrl(QUrl("https://accounts.google.com/o/oauth2/auth"));
     this->oauth2.setAccessTokenUrl(QUrl("https://oauth2.googleapis.com/token"));
     this->oauth2.setScope("profile email");
     this->oauth2.setClientIdentifier(this->clientId);
@@ -28,13 +28,11 @@ void GoogleAuth::setupOauth(){
             QAbstractOAuth::Status status) {
         if (status == QAbstractOAuth::Status::Granted)
         {
-            const QString token = this->oauth2.token();
-            const QString refreshTokenthis=this->oauth2.refreshToken();
-            qDebug()<<oauth2.token();
+            qDebug()<<oauth2.token()<<"   Test1";
             emit authenticated();
         }
         else{
-            qDebug()<<oauth2.state();
+            qDebug()<<oauth2.state()<<"   Test2";
         }
     });
     this->oauth2.setModifyParametersFunction([&](QAbstractOAuth::Stage stage, QMultiMap<QString, QVariant> *parameters) {
@@ -88,8 +86,14 @@ void GoogleAuth::grant()
 QString GoogleAuth::getToken()
 {
     QString bearer = this->oauth2.token();
-    //qDebug()<<bearer;
+    QVariantMap bearer2 = this->oauth2.extraTokens();
     return bearer;
+}
+
+QString GoogleAuth::getIdToken()
+{
+    QVariantMap bearer2 = this->oauth2.extraTokens();
+    return bearer2["id_token"].toString();
 }
 
 const QString &GoogleAuth::getClientCode() const

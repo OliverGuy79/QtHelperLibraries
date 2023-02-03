@@ -19,7 +19,7 @@ Rectangle {
 
     color: backgroundColor
 
-    onWidthChanged: {
+    function rearrangeItems(){
 
         if ( gridLayout.columns > 1 && width < (gridLayout.children[0].implicitWidth*gridLayout.columns +gridLayout.rowSpacing *(gridLayout.columns-1))){
             gridLayout.columns = gridLayout.columns-1
@@ -38,6 +38,11 @@ Rectangle {
         dynamicContentHeight = tempHeight
     }
 
+    onWidthChanged: {
+
+        root.rearrangeItems()
+    }
+
     Component.onCompleted: {
 
         if(root.children.length <= 1){
@@ -48,25 +53,7 @@ Rectangle {
             root.children[1].parent = gridLayout
         }
 
-        if ( gridLayout.columns > 1 && width < (gridLayout.children[0].implicitWidth*gridLayout.columns +gridLayout.rowSpacing *(gridLayout.columns-1))){
-            gridLayout.columns = gridLayout.columns-1
-        }
-        else if ( width > (gridLayout.children[0].implicitWidth*(gridLayout.columns+1) +gridLayout.rowSpacing *(gridLayout.columns-1))){
-            gridLayout.columns = gridLayout.columns+1
-        }
-
-
-        gridLayout.rows = Math.ceil(gridLayout.children.length / gridLayout.columns)
-        var tempHeight = 0
-
-        for (let i = 0; i<gridLayout.children.length; i+=gridLayout.columns){
-            tempHeight += gridLayout.children[i].height
-        }
-        tempHeight += (gridLayout.rows)* padding
-        dynamicContentHeight = tempHeight
-
-
-
+        root.rearrangeItems()
     }
 
     Flickable {
@@ -94,15 +81,17 @@ Rectangle {
             columns: 3
             rows: 3
             columnSpacing: root.padding
-            rowSpacing: 30
+            rowSpacing: root.padding
 
             Repeater{
                 id: items
                 model: root.model
                 delegate: root.delegate
+
+                onItemAdded: {
+                    root.rearrangeItems()
+                }
             }
-
-
         }
     }
 }

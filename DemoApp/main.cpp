@@ -2,7 +2,6 @@
 #include <QQmlApplicationEngine>
 #include <QDir>
 #include <QtWebView/QtWebView>
-#include "../QDotEnv/qdotenv.h"
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

@@ -17,6 +17,8 @@ Window {
     color: "#ffffff"
     title: qsTr("Hello World")
 
+
+
     Drawer{
         id: drawer
         interactive: true

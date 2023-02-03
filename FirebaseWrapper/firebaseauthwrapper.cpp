@@ -18,7 +18,7 @@ FirebaseAuthWrapper::~FirebaseAuthWrapper()
 void FirebaseAuthWrapper::setupGoogleAuth(QString clientId, QString clientCode){
 
     googleAuth.reset(new GoogleAuth(clientId, clientCode, this));
-    connect(googleAuth.data(), &GoogleAuth::authenticated, this, &FirebaseAuthWrapper::signInWithOauthAccessToken);
+    connect(googleAuth.data(), &GoogleAuth::authenticated, this, &FirebaseAuthWrapper::signInWithGoogleOauthIdToken);
     connect(googleAuth.data(), &GoogleAuth::userInfoChanged, this, &FirebaseAuthWrapper::setGoogleUserInfo);
 
 }
@@ -87,8 +87,14 @@ void FirebaseAuthWrapper::signInWithRefreshToken(const QString &email, const QSt
 void FirebaseAuthWrapper::signInWithGoogle(){
 
     this->googleAuth->grant();
+
+
 }
 
+
+void FirebaseAuthWrapper::printSignInResponse(){
+//                qDebug()<<restApi->getLatestResponse();
+}
 
 void FirebaseAuthWrapper::generateOauthToken(){
 
@@ -96,19 +102,20 @@ void FirebaseAuthWrapper::generateOauthToken(){
 }
 
 
-void FirebaseAuthWrapper::signInWithOauthAccessToken()
+void FirebaseAuthWrapper::signInWithGoogleOauthIdToken()
 {
 
+    //qDebug()<<"\n\nId Token: "<<googleAuth->getIdToken()<<"\n\n";
+
     QVariantMap body;
-    body["postBody"] = "id_token="+googleAuth->getToken()+"&providerId=google.com";
+    body["postBody"] = "id_token="+googleAuth->getIdToken()+"&providerId=google.com";
     body["requestUri"] = "http://localhost";
     body["returnIdpCredential"] = true;
     body["returnSecureToken"] = true;
     QVariantMap headers;
     headers["Content-Type"] ="application/json";
 
-
-    restApi->post(oauthEndpoint,body, QVariantMap(), headers);
+    restApi->post(googleOauthSignInEndpoint,body, QVariantMap(), headers);
 }
 
 
@@ -126,8 +133,8 @@ void FirebaseAuthWrapper::parseAuthResponse(QVariant response)
         emit signedIn(response);
 
     }
-    //    QJsonDocument jsonResponse = QJsonDocument::fromVariant(response);
-    //    qDebug()<<jsonResponse;
+        QJsonDocument jsonResponse = QJsonDocument::fromVariant(response);
+        qDebug()<<jsonResponse;
 
 }
 
@@ -137,7 +144,7 @@ void FirebaseAuthWrapper::setApiKey(const QString &newApiKey)
     this->emailSignUpEndpoint = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + apiKey;
     this->emailSignInEndpoint = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + apiKey;
     this->refreshTokenEndpoint = "https://securetoken.googleapis.com/v1/token?key=" + apiKey;
-    this->oauthEndpoint = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=" + apiKey;
+    this->googleOauthSignInEndpoint = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=" + apiKey;
 
 
 }

@@ -15,6 +15,7 @@ class CUTESIMPLERESTCLIENTLIB_EXPORT RestApiManager:  public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant latestResponse READ getLatestResponse WRITE setLatestResponse NOTIFY latestResponseChanged)
+    Q_PROPERTY(QVariant responseStatusCode READ getResponseStatusCode WRITE setResponseStatusCode NOTIFY responseStatusCodeChanged)
     QML_ELEMENT
 
 
@@ -30,6 +31,8 @@ public:
 
     const QVariant &getResponseStatusCode() const;
 
+    void setResponseStatusCode(const QVariant &newResponseStatusCode);
+
 public slots:
     void get(QString endpoint, QVariantMap parameters = QVariantMap(), QVariantMap headers = QVariantMap());
     void post(QString endpoint,  QVariantMap body= QVariantMap(), QVariantMap parameters= QVariantMap(), QVariantMap headers= QVariantMap());
@@ -43,6 +46,8 @@ public slots:
 signals:
     void latestResponseChanged();
     void responseReady(QVariant response);
+
+    void responseStatusCodeChanged();
 
 private:
 

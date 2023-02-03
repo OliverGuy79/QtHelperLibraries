@@ -14,7 +14,11 @@
 
 
 
-
+/**
+ * @brief Construct a new Rest Api Manager:: Rest Api Manager object
+ * 
+ * @param parent 
+ */
 RestApiManager::RestApiManager(QObject *parent): QObject(parent)
 {
     m_networkManager.reset(new QNetworkAccessManager(this));
@@ -33,7 +37,7 @@ const QVariant &RestApiManager::getLatestResponse() const
 void RestApiManager::handleFailedRequest(QNetworkReply::NetworkError code)
 {
     qDebug()<<"Error Occured! Error Code: "<<code
-           <<"\nFailed Request URL: "<< m_networkReply->request().url();
+             <<"\nFailed Request URL: "<< m_networkReply->request().url();
 }
 
 
@@ -41,18 +45,18 @@ QVariant RestApiManager::networkReplyReadRead()
 {
     responseStatusCode = m_networkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     QByteArray rawResponse = m_networkReply->readAll();
+    qDebug()<<rawResponse;
     QVariant tempResponse;
     if (QJsonDocument::fromJson( rawResponse).isObject()){
         tempResponse = QJsonDocument::fromJson( rawResponse).object().toVariantMap();
     }
     else if (QJsonDocument::fromJson( rawResponse).isArray()){
-         tempResponse = QJsonDocument::fromJson( rawResponse).array().toVariantList();
+        tempResponse = QJsonDocument::fromJson( rawResponse).array().toVariantList();
     }
     emit responseReady(tempResponse);
     m_latestResponse = tempResponse;
     emit latestResponseChanged();
 
-    QVariant status_code = m_networkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
     if ( !fileToSend.isNull()){
         fileToSend->close();
     }
@@ -101,7 +105,13 @@ QVariant RestApiManager::networkReplyReadRead()
     return m_latestResponse;
 }
 
-
+/**
+ * @brief Sends an HTTP get request using the given endpoint and parameters
+ * 
+ * @param endpoint 
+ * @param parameters 
+ * @param headers 
+ */
 void RestApiManager::get(QString endpoint, QVariantMap parameters, QVariantMap headers )
 {
 
@@ -114,9 +124,9 @@ void RestApiManager::get(QString endpoint, QVariantMap parameters, QVariantMap h
     if (!parameters.isEmpty()){
         QMapIterator<QString, QVariant> i(parameters);
         while (i.hasNext()) {
-             i.next();
-             query.addQueryItem(i.key(), i.value().toString());
-         }
+            i.next();
+            query.addQueryItem(i.key(), i.value().toString());
+        }
     }
     if(!query.isEmpty())
         urlEndpoint.setQuery(query);
@@ -125,11 +135,11 @@ void RestApiManager::get(QString endpoint, QVariantMap parameters, QVariantMap h
 
     //Set  The Headers
     if (!headers.isEmpty()){
-        QMapIterator<QString, QVariant> i(parameters);
+        QMapIterator<QString, QVariant> i(headers);
         while (i.hasNext()) {
-             i.next();
-             request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
-         }
+            i.next();
+            request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
+        }
     }
 
     if(!m_networkReply.isNull() && m_networkReply->isRunning()){
@@ -145,6 +155,14 @@ void RestApiManager::get(QString endpoint, QVariantMap parameters, QVariantMap h
 
 }
 
+/**
+ * @brief Sends an HTTP get request using the given endpoint , body and parameters
+ * 
+ * @param endpoint 
+ * @param body 
+ * @param parameters 
+ * @param headers 
+ */
 void RestApiManager::post(QString endpoint, QVariantMap body, QVariantMap parameters, QVariantMap headers)
 {
     QUrl urlEndpoint(endpoint);
@@ -154,22 +172,26 @@ void RestApiManager::post(QString endpoint, QVariantMap body, QVariantMap parame
     if (!parameters.isEmpty()){
         QMapIterator<QString, QVariant> i(parameters);
         while (i.hasNext()) {
-             i.next();
-             query.addQueryItem(i.key(), i.value().toString());
-         }
+            i.next();
+            query.addQueryItem(i.key(), i.value().toString());
+            qDebug()<<"Parameter:  "<<i.key().toUtf8();
+
+        }
     }
     if(!query.isEmpty())
         urlEndpoint.setQuery(query);
+    qDebug()<<"Endpoint:  "<<urlEndpoint;
     QNetworkRequest request = QNetworkRequest(urlEndpoint);
 
 
     //Set  The Headers
     if (!headers.isEmpty()){
-        QMapIterator<QString, QVariant> i(parameters);
+        QMapIterator<QString, QVariant> i(headers);
         while (i.hasNext()) {
-             i.next();
-             request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
-         }
+            i.next();
+            request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
+            qDebug()<<"Header:  "<<i.key().toUtf8();
+        }
     }
 
 
@@ -201,9 +223,9 @@ void RestApiManager::put(QString endpoint, QVariantMap body, QVariantMap paramet
     if (!parameters.isEmpty()){
         QMapIterator<QString, QVariant> i(parameters);
         while (i.hasNext()) {
-             i.next();
-             query.addQueryItem(i.key(), i.value().toString());
-         }
+            i.next();
+            query.addQueryItem(i.key(), i.value().toString());
+        }
     }
     if(!query.isEmpty())
         urlEndpoint.setQuery(query);
@@ -212,11 +234,11 @@ void RestApiManager::put(QString endpoint, QVariantMap body, QVariantMap paramet
 
     //Set  The Headers
     if (!headers.isEmpty()){
-        QMapIterator<QString, QVariant> i(parameters);
+        QMapIterator<QString, QVariant> i(headers);
         while (i.hasNext()) {
-             i.next();
-             request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
-         }
+            i.next();
+            request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
+        }
     }
 
 
@@ -244,9 +266,9 @@ void RestApiManager::del(QString endpoint, QVariantMap parameters, QVariantMap h
     if (!parameters.isEmpty()){
         QMapIterator<QString, QVariant> i(parameters);
         while (i.hasNext()) {
-             i.next();
-             query.addQueryItem(i.key(), i.value().toString());
-         }
+            i.next();
+            query.addQueryItem(i.key(), i.value().toString());
+        }
     }
     if(!query.isEmpty())
         urlEndpoint.setQuery(query);
@@ -255,11 +277,11 @@ void RestApiManager::del(QString endpoint, QVariantMap parameters, QVariantMap h
 
     //Set  The Headers
     if (!headers.isEmpty()){
-        QMapIterator<QString, QVariant> i(parameters);
+        QMapIterator<QString, QVariant> i(headers);
         while (i.hasNext()) {
-             i.next();
-             request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
-         }
+            i.next();
+            request.setRawHeader(i.key().toUtf8(), i.value().toString().toUtf8());
+        }
     }
 
     if(!m_networkReply.isNull() && m_networkReply->isRunning()){
@@ -286,8 +308,8 @@ void RestApiManager::uploadIamge(QString endpoint, QString FilePath, QVariantMap
     else if (extension.compare("png"))
         imageContentType = QVariant("image/png");
     else{
-            qDebug()<<"Error. Unsupported data type";
-            return;
+        qDebug()<<"Error. Unsupported data type";
+        return;
     }
 
     multiPart.reset(new QHttpMultiPart(QHttpMultiPart::FormDataType));
@@ -306,7 +328,7 @@ void RestApiManager::uploadIamge(QString endpoint, QString FilePath, QVariantMap
         qDebug()<<"File Not Opened";
         return;
     }
-//    fileToSend->setParent(multiPart.data()); // we cannot delete the file now, so delete it with the multiPart
+    //    fileToSend->setParent(multiPart.data()); // we cannot delete the file now, so delete it with the multiPart
 
     QJsonDocument jsonBody = QJsonDocument::fromVariant(body);
 
@@ -341,7 +363,7 @@ void RestApiManager::uploadIamge(QString endpoint, QString FilePath, QVariantMap
 
 void RestApiManager::uploadAudio(QString endpoint, QString FilePath, QVariantMap body, QVariantMap parameters, QVariantMap headers)
 {
-// TODO Implement UploadAudio method
+    // TODO Implement UploadAudio method
 }
 
 void RestApiManager::setLatestResponse(const QVariant &newLatestResponse)
@@ -367,6 +389,14 @@ void RestApiManager::checkRequestStatus(){
         qDebug()<<"Request Not Made Yet";
     }
 
+}
+
+void RestApiManager::setResponseStatusCode(const QVariant &newResponseStatusCode)
+{
+    if (responseStatusCode == newResponseStatusCode)
+        return;
+    responseStatusCode = newResponseStatusCode;
+    emit responseStatusCodeChanged();
 }
 
 const QVariant &RestApiManager::getResponseStatusCode() const

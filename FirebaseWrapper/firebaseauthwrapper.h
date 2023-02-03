@@ -24,6 +24,7 @@ public:
     void setGoogleUserInfo();
     const QString &getEmailIdToken() const;
     void setEmailIdToken(const QString &newEmailIdToken);
+    const QString &getEmailRefreshToken() const;
 
 
 public slots:
@@ -33,16 +34,16 @@ public slots:
     void signInWithRefreshToken(const QString & email, const QString & password);
     void parseAuthResponse(QVariant response);
     void setApiKey(const QString &newApiKey);
-    const QString &getEmailRefreshToken() const;
     void setEmailRefreshToken(const QString &newEmailRefreshToken);
 
     QString getApiKey();
-    void signInWithOauthAccessToken();
+    void signInWithGoogleOauthIdToken();
     void generateOauthToken();
     void checkRestApiState();
     void signInWithGoogle();
     void setupGoogleAuth(QString clientId, QString clientCode);
     QString getGoogleToken();
+    void printSignInResponse();
 signals:
     void signUpCompleted();
     void signInCompleted();
@@ -62,7 +63,7 @@ private:
     QString emailSignUpEndpoint;
     QString emailSignInEndpoint;
     QString refreshTokenEndpoint;
-    QString oauthEndpoint;
+    QString googleOauthSignInEndpoint;
     QString emailIdToken;
     QString emailRefreshToken;
     QSharedPointer<RestApiManager> restApi;
